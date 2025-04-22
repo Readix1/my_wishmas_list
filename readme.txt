@@ -12,7 +12,18 @@ pouvoir ajouter des utilisateurs pour partager la famille
 
 curl -X POST http://127.0.0.1:8000/api/token/ -H "Content-Type: application/json" -d '{"username": "", "password": ""}'
 
-curl -X POST http://127.0.0.1:8000/api/listes/ -H "Authorization: Token 41aff3bee92511db4eacce6a740b4dc286114ad8" -H "Content-Type: application/json" -d '{"name": "Liste de Noël", "is_shared": false}'
+curl -X POST http://127.0.0.1:8000/api/listes/ -H "Authorization: Token 41aff3bee92511db4eacce6a740b4dc286114ad8" -H "Content-Type: application/json" -d '{"name": "Liste de Noel", "is_shared": false}'
+
+curl -X PUT http://127.0.0.1:8000/api/listes/3/ -H "Authorization: Token 41aff3bee92511db4eacce6a740b4dc286114ad8" -H "Content-Type: application/json" -d '{"name": "Liste de Nowel", "is_shared": true}'
+
+curl -X GET http://127.0.0.1:8000/api/listes/2/ -H "Authorization: Token 41aff3bee92511db4eacce6a740b4dc286114ad8" -H "Content-Type: application/json"
+
+
+curl -X GET http://127.0.0.1:8000/api/listes/ -H "Authorization: Token 41aff3bee92511db4eacce6a740b4dc286114ad8" -H "Content-Type: application/json"
+
+curl -X DELETE http://127.0.0.1:8000/api/listes/2/ -H "Authorization: Token 41aff3bee92511db4eacce6a740b4dc286114ad8" -H "Content-Type: application/json"
+
+
 
 Méthode | URL | Action
 GET | /api/listes/ | Lister mes listes

@@ -7,6 +7,8 @@ class ListeViewSet(viewsets.ModelViewSet):
     queryset = Liste.objects.all()
     serializer_class = ListeSerializer
     permission_classes = [permissions.IsAuthenticated, IsOwner]
+    http_method_names = ['get', 'post', 'put', 'patch', 'delete']
+    
 
     def perform_create(self, serializer):
         serializer.save(owner=self.request.user)
