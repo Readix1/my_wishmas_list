@@ -1,6 +1,9 @@
 from django.db import models
 from django.conf import settings
 from django.utils import timezone
+import uuid
+from users.models import CustomUser  # Assuming you have a custom user model in users app
+
 
 class Liste(models.Model):
     name = models.CharField(max_length=255)
@@ -12,6 +15,7 @@ class Liste(models.Model):
     is_shared = models.BooleanField(default=False)
     created_at = models.DateTimeField(default=timezone.now)
     updated_at = models.DateTimeField(auto_now=True)
+    share_token = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
 
     def __str__(self):
         return f"{self.name} ({self.owner.email})"
@@ -52,3 +56,17 @@ class Produit(models.Model):
 
     def __str__(self):
         return self.name
+
+
+class ShareRequest(models.Model):
+    liste = models.ForeignKey(Liste, related_name='demandes', on_delete=models.CASCADE)
+    invited_by = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    status = models.CharField(max_length=10, choices=[
+        ('pending', 'En attente'),
+        ('accepted', 'Acceptée'),
+        ('refused', 'Refusée'),
+    ], default='pending')
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        unique_together = ('liste', 'invited_by')

@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'corsheaders',
     "users",
     "wishlist",
     'rest_framework',
@@ -46,6 +47,8 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
+    'django.middleware.common.CommonMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -72,6 +75,19 @@ TEMPLATES = [
         },
     },
 ]
+
+
+CORS_ALLOWED_ORIGINS = [
+    "http://192.168.1.56:8001",
+    "http://192.168.1.56", 
+    'http://localhost:8080',  # Ajoutez l'URL de votre frontend Vue.js
+    'http://127.0.0.1:8001',  # Si vous travaillez avec l'IP locale
+    'http://192.168.1.22:8001',  # L'adresse IP locale pour votre API en dev
+    'http://92.88.95.214:8001',  # L'adresse IP publique pour l'accès externe
+]
+
+if DEBUG:
+    CORS_ALLOWED_ORIGINS += ["http://localhost:5173"]
 
 WSGI_APPLICATION = 'my_wishmas_list.wsgi.application'
 
