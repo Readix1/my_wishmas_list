@@ -33,8 +33,8 @@ from .models import ShareRequest
 
 @admin.register(ShareRequest)
 class ShareRequestAdmin(admin.ModelAdmin):
-    list_display = ('liste', 'invited_by', 'status', 'created_at')
+    list_display = ('liste', 'follower', 'status', 'created_at')
     list_filter = ('status', 'created_at')
-    search_fields = ('liste__name', 'invited_by__email')
-    # readonly_fields = ('liste', 'invited_by', 'created_at')
+    search_fields = ('liste__name', 'follower__email')
+    # readonly_fields = ('liste', 'follower', 'created_at')
     ordering = ('-created_at',)

@@ -42,12 +42,12 @@ class CreateShareRequestView(views.APIView):
         if liste.owner == request.user:
             raise PermissionDenied("Tu es déjà le propriétaire de cette liste.")
 
-        if ShareRequest.objects.filter(liste=liste, invited_by=request.user).exists():
+        if ShareRequest.objects.filter(liste=liste, follower =request.user).exists():
             return Response({"detail": "Demande déjà envoyée."}, status=400)
 
         share_request = ShareRequest.objects.create(
             liste=liste,
-            invited_by=request.user
+            follower =request.user
         )
         serializer = ShareRequestSerializer(share_request)
         return Response(serializer.data, status=201)
@@ -77,7 +77,7 @@ class AcceptShareRequestView(views.APIView):
 
         demande.status = 'accepted'
         demande.save()
-        # demande.liste.shared_with.add(demande.invited_by)
+        # demande.liste.shared_with.add(demande.follower)
 
         return Response({"detail": "Demande acceptée."})
 
@@ -98,3 +98,51 @@ class RefuseShareRequestView(views.APIView):
         demande.save()
 
         return Response({"detail": "Demande refusée."})
+
+
+from rest_framework import generics
+from django.contrib.auth import get_user_model
+from ..serializers.user import CustomUserSerializer
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.exceptions import PermissionDenied
+
+CustomUser = get_user_model()
+
+class ListeMembresView(generics.ListAPIView):
+    serializer_class = CustomUserSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        liste_id = self.kwargs['pk']
+        try:
+            liste = Liste.objects.get(pk=liste_id)
+            
+        except Liste.DoesNotExist:
+            raise NotFound("Liste introuvable.")
+
+
+        if liste.owner != self.request.user:
+            raise PermissionDenied("Tu n'as pas accès à ces membres.")
+
+        # 🔽 Liste des utilisateurs ayant une demande acceptée
+        return CustomUser.objects.filter(
+            sharerequest__liste=liste,
+            sharerequest__status='accepted'
+        )
+
+
+class ListeDemandesView(generics.ListAPIView):
+    serializer_class = ShareRequestSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        liste_id = self.kwargs['pk']
+        try:
+            liste = Liste.objects.get(pk=liste_id)
+        except Liste.DoesNotExist:
+            raise NotFound("Liste introuvable.")
+
+        if liste.owner != self.request.user:
+            raise PermissionDenied("Tu n'as pas accès aux demandes de cette liste.")
+
+        return liste.demandes.all()

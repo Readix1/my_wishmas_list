@@ -9,9 +9,9 @@ class ListeSerializer(serializers.ModelSerializer):
 
 
 class ShareRequestSerializer(serializers.ModelSerializer):
-    invited_by = serializers.StringRelatedField(read_only=True)
+    follower = serializers.StringRelatedField(read_only=True)
 
     class Meta:
         model = ShareRequest
-        fields = ['id', 'liste', 'invited_by', 'status', 'created_at']
-        read_only_fields = ['invited_by', 'status', 'created_at']
+        fields = ['id', 'liste', 'follower', 'status', 'created_at']
+        read_only_fields = ['follower', 'status', 'created_at']

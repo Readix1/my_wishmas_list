@@ -60,7 +60,7 @@ class Produit(models.Model):
 
 class ShareRequest(models.Model):
     liste = models.ForeignKey(Liste, related_name='demandes', on_delete=models.CASCADE)
-    invited_by = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    follower  = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
     status = models.CharField(max_length=10, choices=[
         ('pending', 'En attente'),
         ('accepted', 'Acceptée'),
@@ -69,4 +69,4 @@ class ShareRequest(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
-        unique_together = ('liste', 'invited_by')
+        unique_together = ('liste', 'follower')
