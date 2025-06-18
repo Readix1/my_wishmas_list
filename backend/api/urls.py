@@ -2,6 +2,7 @@ from rest_framework.routers import DefaultRouter
 from .views.listes import (ListeViewSet, ListeJoinDetailView, CreateShareRequestView,
     ShareRequestListView, AcceptShareRequestView, RefuseShareRequestView, ListeMembresView, ListeDemandesView)
 from .views.produits import ProduitViewSet
+from .views.logout import LogoutView
 from django.urls import path, include
 from rest_framework.authtoken.views import obtain_auth_token
 
@@ -21,4 +22,5 @@ urlpatterns += [
     path('demandes/<int:pk>/refuse/', RefuseShareRequestView.as_view(), name='demande-refuser'),
     path('listes/<int:pk>/followers/', ListeMembresView.as_view(), name='liste-membres'),
     path('listes/<int:pk>/share-requests/', ListeDemandesView.as_view(), name='liste-demandes'),
+    path('logout/', LogoutView.as_view(), name='logout'),
 ]
